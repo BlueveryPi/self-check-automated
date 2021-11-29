@@ -19,6 +19,11 @@ driver.implicitly_wait(15)
 driver.get('https://hcs.eduro.go.kr/#/loginWithUserInfo')
 action=ActionChains(driver)
 
+region=""
+school=""
+guegep=""
+name=""
+birth=""
 
 def run():
     action = ActionChains(driver)
@@ -36,7 +41,7 @@ def run():
     action.click().perform()
     action = ActionChains(driver)
     ddelement= Select(driver.find_element_by_xpath("//select[@id='sidolabel']"))
-    ddelement.select_by_visible_text('경기도')
+    ddelement.select_by_visible_text(region)
     action = ActionChains(driver)
     e = driver.find_element_by_xpath("//select[@id='sidolabel']")
     action.move_to_element_with_offset(e, 40, 20)
@@ -48,7 +53,7 @@ def run():
     action.click().perform()
     action = ActionChains(driver)
     ddelement= Select(driver.find_element_by_xpath("//select[@id='crseScCode']"))
-    ddelement.select_by_visible_text('중학교')
+    ddelement.select_by_visible_text(guegep)
     action = ActionChains(driver)
     e = driver.find_element_by_xpath("//select[@id='crseScCode']")
     action.move_to_element_with_offset(e, 40, 20)
@@ -59,7 +64,7 @@ def run():
     action.move_to_element_with_offset(e, 10, 10)
     action.click().perform()
 
-    e.send_keys("서현중학교" + Keys.ENTER)
+    e.send_keys(school + Keys.ENTER)
 
     action = ActionChains(driver)
     e = driver.find_element_by_xpath("//ul[@role='radiogroup']")
@@ -76,11 +81,11 @@ def run():
     action.move_to_element_with_offset(e, 10, 10)
     action.click().perform()
 
-    e.send_keys("김호연" + Keys.TAB)
+    e.send_keys(name + Keys.TAB)
 
     action = ActionChains(driver)
     e = driver.find_element_by_xpath("//input[@id='birthday_input']")
-    e.send_keys("070810" + Keys.ENTER)
+    e.send_keys(birth + Keys.ENTER)
 
     action = ActionChains(driver)
     e = driver.find_element_by_xpath("//input[@id='password']")
