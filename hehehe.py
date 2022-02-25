@@ -1,119 +1,129 @@
-#!D:\anaconda3\envs\py39\
+from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
 import threading
 import time
 
+#service = ChromeService(executable_path=ChromeDriverManager().install())
 options = webdriver.ChromeOptions()
 #prefs = {"profile.managed_default_content_settings.images": 2}
+#options.BinaryLocation = "/usr/bin/chromium-browser"
+# we use custom chromedriver for raspberry
+driver_path = "/usr/bin/chromedriver"
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
 #options.add_experimental_option("prefs", prefs)
 options.add_argument("--mute-audio")
-driver = webdriver.Chrome(r'codes\funhack\chromedriver.exe', options=options)
+driver = webdriver.Chrome(options=options, service=Service(driver_path))
 driver.implicitly_wait(15)
 driver.get('https://hcs.eduro.go.kr/#/loginWithUserInfo')
 action=ActionChains(driver)
 
-region=""
-school=""
-guegep=""
-name=""
-birth=""
 
 def run():
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//button[@id='btnConfirm2']")
+    e = driver.find_element(By.XPATH, "//button[@id='btnConfirm2']")
     action.move_to_element_with_offset(e, 165, 35)
     action.click().perform()
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//button[@title='학교 검색']")
+    e = driver.find_element(By.XPATH, "//button[@title='학교 검색']")
     action.move_to_element_with_offset(e, 40, 40)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//select[@id='sidolabel']")
+    e = driver.find_element(By.XPATH, "//select[@id='sidolabel']")
     action.move_to_element_with_offset(e, 40, 20)
     action.click().perform()
     action = ActionChains(driver)
-    ddelement= Select(driver.find_element_by_xpath("//select[@id='sidolabel']"))
-    ddelement.select_by_visible_text(region)
+    ddelement= Select(driver.find_element(By.XPATH, "//select[@id='sidolabel']"))
+    ddelement.select_by_visible_text('경기도')
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//select[@id='sidolabel']")
-    action.move_to_element_with_offset(e, 40, 20)
-    action.click().perform()
-
-    action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//select[@id='crseScCode']")
-    action.move_to_element_with_offset(e, 40, 20)
-    action.click().perform()
-    action = ActionChains(driver)
-    ddelement= Select(driver.find_element_by_xpath("//select[@id='crseScCode']"))
-    ddelement.select_by_visible_text(guegep)
-    action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//select[@id='crseScCode']")
+    e = driver.find_element(By.XPATH, "//select[@id='sidolabel']")
     action.move_to_element_with_offset(e, 40, 20)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//input[@id='orgname']")
-    action.move_to_element_with_offset(e, 10, 10)
+    e = driver.find_element(By.XPATH, "//select[@id='crseScCode']")
+    action.move_to_element_with_offset(e, 40, 20)
     action.click().perform()
-
-    e.send_keys(school + Keys.ENTER)
-
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//ul[@role='radiogroup']")
-    action.move_to_element_with_offset(e, 10, 10)
-    action.click().perform()
-
+    ddelement= Select(driver.find_element(By.XPATH, "//select[@id='crseScCode']"))
+    ddelement.select_by_visible_text('중학교')
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//div[@class='layerBtnWrap']")
-    action.move_to_element_with_offset(e, 10, 10)
+    e = driver.find_element(By.XPATH, "//select[@id='crseScCode']")
+    action.move_to_element_with_offset(e, 40, 20)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//input[@id='user_name_input']")
+    e = driver.find_element(By.XPATH, "//input[@id='orgname']")
     action.move_to_element_with_offset(e, 10, 10)
     action.click().perform()
 
-    e.send_keys(name + Keys.TAB)
+    e.send_keys("서현중학교" + Keys.ENTER)
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//input[@id='birthday_input']")
-    e.send_keys(birth + Keys.ENTER)
-
-    action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//input[@id='password']")
+    e = driver.find_element(By.XPATH, "//ul[@role='radiogroup']")
     action.move_to_element_with_offset(e, 10, 10)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//a[@aria-label='0']")
+    e = driver.find_element(By.XPATH, "//div[@class='layerBtnWrap']")
+    action.move_to_element_with_offset(e, 10, 10)
+    action.click().perform()
+
+    action = ActionChains(driver)
+    e = driver.find_element(By.XPATH, "//input[@id='user_name_input']")
+    action.move_to_element_with_offset(e, 10, 10)
+    action.click().perform()
+
+    e.send_keys("김호연" + Keys.TAB)
+
+    action = ActionChains(driver)
+    e = driver.find_element(By.XPATH, "//input[@id='birthday_input']")
+    e.send_keys("070810" + Keys.ENTER)
+
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[@title='가상키패드열기']"))
+    )
+
+    action = ActionChains(driver)
+    e = driver.find_element(By.XPATH, "//button[@title='가상키패드열기']").send_keys(Keys.ENTER)
+    #action.move_to_element_with_offset(e, 10, 10)
+    #action.click().perform()
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//a[@aria-label='0']"))
+    )
+
+    action = ActionChains(driver)
+    e = driver.find_element(By.XPATH, "(//a[@aria-label='0'])[1]")
     action.move_to_element(e)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//a[@aria-label='4']")
+    e = driver.find_element(By.XPATH, "//a[@aria-label='4']")
     action.move_to_element(e)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//a[@aria-label='2']")
+    e = driver.find_element(By.XPATH, "//a[@aria-label='2']")
     action.move_to_element(e)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//a[@aria-label='1']")
+    e = driver.find_element(By.XPATH, "//a[@aria-label='1']")
     action.move_to_element(e)
     action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//input[@id='btnConfirm']")
+    e = driver.find_element(By.XPATH, "//input[@id='btnConfirm']")
     action.move_to_element(e)
     action.click().perform()
 
@@ -122,20 +132,24 @@ def run():
     )
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//section[@class='memberWrap']//li[1]")
+    e = driver.find_element(By.XPATH, "//section[@class='memberWrap']//li[1]")
     action.move_to_element_with_offset(e, 300,50)
     action.click().perform()
     driver.implicitly_wait(15)
 
-    for i in range(3):
+    for i in range(5):
         action = ActionChains(driver)
-        e = driver.find_element_by_xpath(f"//input[@id='survey_q{i+1}a1']")
+        e = driver.find_element(By.XPATH, f"//input[@id='survey_q{i+1}a1']")
         action.move_to_element(e)
         action.click().perform()
 
     action = ActionChains(driver)
-    e = driver.find_element_by_xpath("//input[@id='btnConfirm']")
+    e = driver.find_element(By.XPATH, "//input[@id='btnConfirm']")
     action.move_to_element(e)
     action.click().perform()
 
-run()
+try:
+    run()
+    driver.close()
+except UnexpectedAlertPresentException:
+    driver.close()
